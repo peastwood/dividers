@@ -1,0 +1,12 @@
+{
+  "name": "Dividers",
+  "processes": [
+    {
+      "id": "web",
+      "name": "Static site",
+      "command": "npx --yes serve@14.2.4 -l 4330 .",
+      "port": 4330,
+      "url": "http://dividers.localhost:4000/"
+    }
+  ]
+}

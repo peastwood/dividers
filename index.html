@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Website Dividers</title>
+  <meta name="description" content="Horizontal rules and micro-dividers with copy-paste code for CSS, Tailwind, Bootstrap, React, Vue and Svelte.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- Site theme ---------- */
+    :root {
+      --bg: #f6f6f4;
+      --surface: #ffffff;
+      --surface-2: #f1f1ee;
+      --text: #1c1c1e;
+      --muted: #6b6b70;
+      --line: #e4e4e0;
+      --accent: #4f46e5;
+      --accent-soft: #eef0ff;
+      --code-bg: #f7f7f5;
+      --ok: #15803d;
+      --radius: 14px;
+      --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+      --font-serif: "Source Serif 4", Georgia, serif;
+      --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      color-scheme: light;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #121214; --surface: #1b1b1e; --surface-2: #232327; --text: #ececee; --muted: #9a9aa2;
+        --line: #2e2e33; --accent: #8b85ff; --accent-soft: #24233a; --code-bg: #161618; --ok: #4ade80;
+        /* divider variables, so previews read well on dark */
+        --divider-color: #4b4b52; --divider-strong: #a1a1aa; --divider-ink: #a1a1aa; --divider-text: #a1a1aa;
+        --divider-shade: #000000; --divider-highlight: #34343a; --divider-accent: #8b85ff;
+        --band-bg: #26262b; --card-bg: #26262b; --callout-bg: #24233a;
+        color-scheme: dark;
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg: #121214; --surface: #1b1b1e; --surface-2: #232327; --text: #ececee; --muted: #9a9aa2;
+      --line: #2e2e33; --accent: #8b85ff; --accent-soft: #24233a; --code-bg: #161618; --ok: #4ade80;
+      --divider-color: #4b4b52; --divider-strong: #a1a1aa; --divider-ink: #a1a1aa; --divider-text: #a1a1aa;
+      --divider-shade: #000000; --divider-highlight: #34343a; --divider-accent: #8b85ff;
+      --band-bg: #26262b; --card-bg: #26262b; --callout-bg: #24233a;
+      color-scheme: dark;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      font-family: var(--font-ui); font-size: 15px; line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent); }
+    button { font: inherit; color: inherit; }
+
+    .wrap { max-width: 1240px; margin: 0 auto; padding: 0 16px; }
+
+    /* Header */
+    .site-header { padding: 48px 16px 24px; }
+    .site-header h1 {
+      font-family: var(--font-serif); font-weight: 600; font-size: clamp(2rem, 5vw, 3rem);
+      line-height: 1.1; margin: 0 0 10px; letter-spacing: -0.01em;
+    }
+    .site-header p { margin: 0; color: var(--muted); max-width: 60ch; font-size: 1.05rem; }
+
+    /* Toolbar */
+    .toolbar {
+      position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(8px); border-bottom: 1px solid var(--line);
+    }
+    .toolbar .wrap { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding-block: 12px; }
+    .chips { display: flex; gap: 6px; flex-wrap: wrap; flex: 1 1 auto; }
+    .chip {
+      border: 1px solid var(--line); background: var(--surface); border-radius: 999px;
+      padding: 5px 12px; font-size: 13px; cursor: pointer; white-space: nowrap;
+    }
+    .chip[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+    .chip .n { opacity: .55; margin-left: 4px; font-variant-numeric: tabular-nums; }
+    .tools { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .search {
+      border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 14px;
+      font: inherit; font-size: 14px; color: var(--text); width: 190px; max-width: 100%;
+    }
+    .icon-btn {
+      border: 1px solid var(--line); background: var(--surface); border-radius: 999px; width: 34px; height: 34px;
+      display: inline-grid; place-items: center; cursor: pointer; flex: none;
+    }
+    @media (max-width: 640px) {
+      .toolbar { position: static; }
+      .chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+    }
+    .format-pick { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+    .format-pick select {
+      border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 8px;
+      padding: 5px 8px; font: inherit; font-size: 13px;
+    }
+
+    /* Gallery */
+    .category { padding-top: 40px; }
+    .category > h2 { font-family: var(--font-serif); font-weight: 600; font-size: 1.6rem; margin: 0 0 4px; }
+    .category > p { margin: 0 0 18px; color: var(--muted); max-width: 70ch; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 18px; align-items: start; }
+
+    .card {
+      background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+      display: flex; flex-direction: column; overflow: hidden; min-width: 0;
+    }
+    .card-preview {
+      padding: 28px 24px; min-height: 160px; display: flex; flex-direction: column; justify-content: center;
+      border-bottom: 1px solid var(--line); cursor: pointer; position: relative;
+    }
+    .card-preview:hover { background: var(--surface-2); }
+    .card-preview:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+    .card-preview::after {
+      content: "Open ↗"; position: absolute; top: 8px; right: 12px; font-size: 11px; color: var(--muted);
+      opacity: 0; transition: opacity .15s;
+    }
+    .card-preview:hover::after, .card-preview:focus-visible::after { opacity: 1; }
+    .card-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px; }
+    .card-title h3 { margin: 0; font-size: 15px; font-weight: 600; }
+    .card-title h3 button { all: unset; cursor: pointer; }
+    .card-title h3 button:hover { text-decoration: underline; }
+    .card-title h3 button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+    .card-use { margin: 0; color: var(--muted); font-size: 13.5px; }
+    .badges { display: flex; gap: 6px; flex-wrap: wrap; }
+    .badge {
+      font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 999px;
+      background: var(--surface-2); color: var(--muted); border: 1px solid var(--line);
+    }
+    .badge.classic { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+    .toggle-code {
+      align-self: flex-start; margin-top: 4px; border: 1px solid var(--line); background: transparent;
+      border-radius: 8px; padding: 5px 10px; font-size: 13px; cursor: pointer;
+    }
+    .toggle-code:hover { background: var(--surface-2); }
+
+    /* Code panel */
+    .code { border-top: 1px solid var(--line); background: var(--code-bg); min-width: 0; }
+    .tabs { display: flex; overflow-x: auto; border-bottom: 1px solid var(--line); scrollbar-width: thin; }
+    .tab {
+      border: 0; background: none; padding: 9px 12px; font-size: 12.5px; cursor: pointer; color: var(--muted);
+      border-bottom: 2px solid transparent; white-space: nowrap;
+    }
+    .tab[aria-selected="true"] { color: var(--text); border-bottom-color: var(--accent); font-weight: 600; }
+    .snips { padding: 10px; display: flex; flex-direction: column; gap: 10px; }
+    .snip { position: relative; min-width: 0; }
+    .snip-label { font-size: 11px; color: var(--muted); margin: 0 0 4px 2px; text-transform: uppercase; letter-spacing: .05em; }
+    .snip pre {
+      margin: 0; padding: 12px 14px; padding-right: 72px; background: var(--surface); border: 1px solid var(--line);
+      border-radius: 10px; overflow-x: auto; font-family: var(--font-mono); font-size: 12.5px; line-height: 1.55;
+      cursor: copy; tab-size: 2;
+    }
+    .snip pre:hover, .snip pre:focus-visible { border-color: var(--accent); outline: none; }
+    .copy {
+      position: absolute; bottom: 8px; right: 8px; border: 1px solid var(--line); background: var(--surface-2);
+      border-radius: 7px; padding: 3px 9px; font-size: 12px; cursor: pointer;
+    }
+    .copy.done { color: var(--ok); border-color: var(--ok); }
+    .note { font-size: 12.5px; color: var(--muted); margin: 0 2px; }
+
+    /* Detail page (dialog) */
+    dialog.detail {
+      width: min(1000px, calc(100vw - 16px)); max-height: calc(100vh - 16px); padding: 0; border: 1px solid var(--line);
+      border-radius: 18px; background: var(--bg); color: var(--text);
+    }
+    dialog.detail::backdrop { background: rgb(0 0 0 / .45); }
+    .detail-head { display: flex; justify-content: space-between; align-items: start; gap: 12px; padding: 22px 20px 8px; }
+    .detail-head h2 { font-family: var(--font-serif); font-size: 1.9rem; font-weight: 600; margin: 0 0 4px; line-height: 1.15; }
+    .detail-head p { margin: 0; color: var(--muted); }
+    .detail-kicker { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px !important; }
+    .detail-main { padding: 12px 20px 24px; display: grid; gap: 16px; }
+    .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); min-width: 0; }
+    .panel-title { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0; padding: 12px 16px 0; }
+    .big-preview { padding: 36px clamp(16px, 4vw, 40px); }
+    .article { padding: 24px clamp(16px, 5vw, 56px) 32px; font-family: var(--font-serif); font-size: 1.12rem; line-height: 1.7; }
+    .article h3 { font-size: 1.5rem; margin: 0 0 .4em; line-height: 1.25; font-weight: 600; }
+    .article p { margin: 0 0 1em; max-width: 62ch; }
+    .a11y { padding: 14px 16px; display: grid; gap: 4px; }
+    .a11y strong { font-size: 14px; }
+    .a11y span { color: var(--muted); font-size: 14px; }
+    .detail .code { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+    .detail-nav { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+    .detail-nav button {
+      border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 13px;
+    }
+
+    footer { padding: 56px 16px 40px; color: var(--muted); text-align: center; font-size: 14px; }
+    .empty { color: var(--muted); padding: 40px 0; text-align: center; }
+
+    /* Demo content used inside previews only */
+    .demo-text { margin: 0; color: var(--muted); font-size: 14px; }
+    .demo-dark { background: #0b1020; padding: 24px; border-radius: 10px; }
+    .demo-wave-after { background: #6366f1; color: #fff; padding: 12px 16px; font-size: 14px; border-radius: 0 0 8px 8px; }
+    .preview-surface h2, .preview-surface h3 { margin: 0; font-size: 1.1rem; font-weight: 600; }
+    .preview-surface p { margin: 0; }
+    .article.preview-surface h3 { font-size: 1.5rem; margin: 0 0 .4em; }
+    .article.preview-surface p { margin: 0 0 1em; }
+  </style>
+  <!-- Divider styles: generated from the same strings the "HTML + CSS" tab shows -->
+  <style id="divider-css"></style>
+</head>
+<body>
+  <header class="site-header wrap">
+    <h1>Website Dividers</h1>
+    <p>Horizontal rules and micro-dividers: lines, whitespace, card edges and partial-width accents. Click any snippet to copy it, in plain CSS, Tailwind, Bootstrap, React, Vue or Svelte.</p>
+  </header>
+
+  <div class="toolbar">
+    <div class="wrap">
+      <div class="chips" id="chips" role="toolbar" aria-label="Filter by category"></div>
+      <div class="tools">
+        <input class="search" id="search" type="search" placeholder="Search dividers" aria-label="Search dividers">
+        <label class="format-pick">Code
+          <select id="format"></select>
+        </label>
+        <button class="icon-btn" id="theme" type="button" aria-label="Toggle dark mode" title="Toggle dark mode"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap" id="gallery"></main>
+
+  <footer class="wrap">
+    Made by <a href="https://pauleastwood.org">Paul Eastwood</a>
+  </footer>
+
+  <dialog class="detail" id="detail" aria-labelledby="detail-title"></dialog>
+
+<script>
+/* ======================================================================
+   Divider data. Each entry is the single source for its preview and its
+   snippets. React, Vue and Svelte tabs are generated from the Tailwind markup.
+   a11y: "semantic" | "decorative" | "css" | "labeled"
+   ====================================================================== */
+const CATEGORIES = [
+  { id: "hr", name: "Plain rules", blurb: "Full-width rules built on the native <hr>. They mark a change of topic, and screen readers announce them as a separator." },
+  { id: "space", name: "Whitespace", blurb: "Separate with space or tone instead of a line. Nothing is announced, so headings and landmarks carry the structure." },
+  { id: "card", name: "Cards & containers", blurb: "Separators that live inside or between containers. Mostly decorative, because the container already groups the content." },
+  { id: "accent", name: "Partial-width accents", blurb: "Short or one-sided accents: stubs, bars and underlines." },
+  { id: "gradient", name: "Gradients & effects", blurb: "Rules drawn with gradients or shadows. Each keeps a solid fallback so it still shows in Windows high-contrast mode." },
+  { id: "type", name: "Printer's ornaments", blurb: "Fleurons, dinkuses, head- and tailpieces and scrollwork from the letterpress tradition. All of these use Unicode glyphs, CSS or inline SVG, with no image files. Engraved Victorian-style scrollwork is too detailed for this and needs an SVG file, an image or a dingbat font." },
+  { id: "ornament", name: "Ornamental", blurb: "Rules with text, glyphs, shapes or images. The ornament is hidden from screen readers unless it is real content, like the word “or”." },
+];
+
+const A11Y = {
+  semantic: ["Semantic break", "Uses <hr>, announced as “separator”. Use it when the content changes topic."],
+  decorative: ["Decorative", "Hidden from screen readers with aria-hidden or role=\"presentation\"."],
+  css: ["CSS only", "Drawn with borders, pseudo-elements or spacing. Nothing extra is announced."],
+  labeled: ["Labeled", "The label is real text and is read aloud; the lines are hidden."],
+};
+
+const STAR = `<path fill="currentColor" d="M12 2l2.9 6.9 7.1.6-5.4 4.7 1.6 7L12 17.5 5.8 21.2l1.6-7L2 9.5l7.1-.6z"/>`;
+const WAVE = `<path fill="currentColor" d="M0 40V20Q150 0 300 20T600 20T900 20T1200 20V40Z"/>`;
+
+const SCROLL_HALF = `<path d="M8 12H84C96 12 104 4 112 6C118 8 116 15 110 14C106 13 107 9 110 9"/><path d="M84 12C96 12 104 20 112 18C116 17 116 14 114 13"/>`;
+const SCROLL = `<g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+    ${SCROLL_HALF}
+    <g transform="matrix(-1 0 0 1 240 0)">${SCROLL_HALF}</g>
+  </g>
+  <circle cx="120" cy="12" r="2" fill="currentColor"/>`;
+const HEAD_HALF = `<path d="M20 30C50 30 70 30 90 22C100 18 104 10 98 7C92 4 86 10 90 15C93 19 100 16 99 12"/><path d="M60 30C80 30 96 34 108 30C114 28 116 22 112 20"/><path d="M120 34C116 30 112 24 112 16C112 10 116 6 120 4"/>`;
+const HEAD = `<g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+    ${HEAD_HALF}
+    <g transform="matrix(-1 0 0 1 240 0)">${HEAD_HALF}</g>
+  </g>`;
+const SWELL = `<path fill="currentColor" d="M0 4Q120 0 240 4Q120 8 0 4Z"/>`;
+
+const D = [
+  /* ---------------- Plain rules ---------------- */
+  {
+    id: "browser-default", cat: "hr", name: "Browser default", classic: true, a11y: "semantic",
+    use: "The baseline: what an <hr> looks like with no CSS at all.",
+    html: `<hr>`,
+    css: null,
+    tw: `<hr class="my-6 border-t-2 border-gray-300">`,
+    twNote: "Tailwind's reset removes the default style, so this restores a similar 2px rule.",
+    bs: `<hr>`,
+    note: "The default inset border has low contrast in dark mode.",
+  },
+  {
+    id: "hairline", cat: "hr", name: "Hairline", classic: true, a11y: "semantic",
+    use: "A quiet 1px break between article sections.",
+    html: `<hr class="divider-hairline">`,
+    css: `.divider-hairline {
+  border: 0;
+  border-top: var(--divider-thickness, 1px) solid var(--divider-color, #d1d5db);
+  margin-block: var(--divider-space, 1.5rem);
+}`,
+    tw: `<hr class="my-6 border-gray-300">`,
+    bs: `<hr class="my-4 border-secondary-subtle opacity-100">`,
+    note: "Uses border-top rather than height + background, so it survives forced-colors mode.",
+  },
+  {
+    id: "dashed", cat: "hr", name: "Dashed", classic: true, a11y: "semantic",
+    use: "An informal break, a “cut here” line, or draft content.",
+    html: `<hr class="divider-dashed">`,
+    css: `.divider-dashed {
+  border: 0;
+  border-top: var(--divider-thickness, 3px) dashed var(--divider-color, #bbbbbb);
+  margin-block: var(--divider-space, 1.5rem);
+}`,
+    tw: `<hr class="my-6 border-t-3 border-dashed border-gray-300">`,
+    bs: `<hr class="my-4 border-3 border-secondary opacity-50 hr-dashed">`,
+    bsCss: `.hr-dashed { border-top-style: dashed; }`,
+  },
+  {
+    id: "dotted", cat: "hr", name: "Dotted", classic: true, a11y: "semantic",
+    use: "Light separation in sidebars and footers.",
+    html: `<hr class="divider-dotted">`,
+    css: `.divider-dotted {
+  border: 0;
+  border-top: var(--divider-thickness, 3px) dotted var(--divider-color, #bbbbbb);
+  margin-block: var(--divider-space, 1.5rem);
+}`,
+    tw: `<hr class="my-6 border-t-3 border-dotted border-gray-400">`,
+    bs: `<hr class="my-4 border-3 border-secondary opacity-50 hr-dotted">`,
+    bsCss: `.hr-dotted { border-top-style: dotted; }`,
+    note: "1px dots can drop below 3:1 contrast; keep them 2px or thicker.",
+  },
+  {
+    id: "double", cat: "hr", name: "Double", a11y: "semantic",
+    use: "A formal end of section, receipts and totals.",
+    html: `<hr class="divider-double">`,
+    css: `.divider-double {
+  border: 0;
+  border-top: var(--divider-thickness, 4px) double var(--divider-color, #9ca3af);
+  margin-block: var(--divider-space, 1.5rem);
+}`,
+    tw: `<hr class="my-6 border-t-4 border-double border-gray-400">`,
+    bs: `<hr class="my-4 border-4 border-secondary opacity-75 hr-double">`,
+    bsCss: `.hr-double { border-top-style: double; }`,
+  },
+  {
+    id: "thick", cat: "hr", name: "Thick bar", a11y: "semantic",
+    use: "A strong, chapter-level break.",
+    html: `<hr class="divider-thick">`,
+    css: `.divider-thick {
+  border: 0;
+  border-top: var(--divider-thickness, 6px) solid var(--divider-strong, #374151);
+  margin-block: var(--divider-space, 2rem);
+}`,
+    tw: `<hr class="my-8 border-t-6 border-gray-700">`,
+    bs: `<hr class="my-5 border-5 border-dark opacity-100">`,
+    note: "If it only decorates a hero, add role=\"presentation\".",
+  },
+  {
+    id: "groove", cat: "hr", name: "Groove / emboss", a11y: "semantic",
+    use: "Retro or skeuomorphic interfaces.",
+    html: `<hr class="divider-groove">`,
+    css: `.divider-groove {
+  border: 0;
+  border-top: 1px solid var(--divider-shade, #c4c8ce);
+  border-bottom: 1px solid var(--divider-highlight, #ffffff);
+  margin-block: var(--divider-space, 1.5rem);
+}`,
+    tw: `<hr class="my-6 border-t border-b border-t-gray-300 border-b-white">`,
+    bs: `<hr class="my-4 opacity-100 hr-groove">`,
+    bsCss: `.hr-groove {
+  border-top: 1px solid var(--bs-gray-400);
+  border-bottom: 1px solid var(--bs-white);
+}`,
+    note: "The two-tone effect vanishes in forced-colors mode, but it still reads as a line.",
+  },
+
+  /* ---------------- Whitespace ---------------- */
+  {
+    id: "section-gap", cat: "space", name: "Section gap", a11y: "css",
+    use: "A large vertical gap between page sections.",
+    demo: `<section class="section-gap"><h3>First section</h3><p class="demo-text">Content.</p></section><section class="section-gap"><h3>Next section</h3><p class="demo-text">Content.</p></section>`,
+    html: `<section class="section-gap">
+  <h2>First section</h2>
+  <p>Content.</p>
+</section>
+<section class="section-gap">
+  <h2>Next section</h2>
+  <p>Content.</p>
+</section>`,
+    css: `.section-gap {
+  padding-block: var(--divider-space, 1.5rem);
+}`,
+    tw: `<section class="py-12">
+  <h2>First section</h2>
+  <p>Content.</p>
+</section>`,
+    bs: `<section class="py-5">
+  <h2>First section</h2>
+  <p>Content.</p>
+</section>`,
+    note: "Wrap each part in a <section> with a heading so the break is still navigable. Real pages usually want 3–6rem.",
+  },
+  {
+    id: "spacer-stack", cat: "space", name: "Spacer stack", a11y: "css",
+    use: "Even rhythm between sibling blocks.",
+    html: `<div class="stack">
+  <div class="stack-item">One</div>
+  <div class="stack-item">Two</div>
+  <div class="stack-item">Three</div>
+</div>`,
+    css: `.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--divider-space, 1rem);
+}
+.stack-item {
+  padding: .75rem 1rem;
+  border-radius: .5rem;
+  background: var(--band-bg, #f3f4f6);
+}`,
+    tw: `<div class="flex flex-col gap-4">
+  <div class="rounded-lg bg-gray-100 px-4 py-3">One</div>
+  <div class="rounded-lg bg-gray-100 px-4 py-3">Two</div>
+  <div class="rounded-lg bg-gray-100 px-4 py-3">Three</div>
+</div>`,
+    bs: `<div class="vstack gap-3">
+  <div class="rounded bg-body-tertiary px-3 py-2">One</div>
+  <div class="rounded bg-body-tertiary px-3 py-2">Two</div>
+  <div class="rounded bg-body-tertiary px-3 py-2">Three</div>
+</div>`,
+    note: "Purely visual. If the items are a group, use a list or fieldset.",
+  },
+  {
+    id: "invisible-hr", cat: "space", name: "Invisible hr", a11y: "semantic",
+    use: "A break that screen readers announce, with no visible line.",
+    demo: `<p class="demo-text">End of one topic.</p><hr class="divider-invisible"><p class="demo-text">Start of the next.</p>`,
+    html: `<hr class="divider-invisible">`,
+    css: `.divider-invisible {
+  border: 0;
+  margin-block: var(--divider-space, 3rem);
+}`,
+    tw: `<hr class="my-12 border-0">`,
+    bs: `<hr class="my-5 border-0">`,
+    note: "Hide only the border. Never use display:none, which removes it from the accessibility tree.",
+  },
+  {
+    id: "tonal-band", cat: "space", name: "Tonal band", a11y: "css",
+    use: "Alternating section backgrounds instead of rules.",
+    demo: `<section class="band"><h3>Banded section</h3><p class="demo-text">The background change is the divider.</p></section>`,
+    html: `<section class="band">
+  <h2>Banded section</h2>
+  <p>The background change is the divider.</p>
+</section>`,
+    css: `.band {
+  background: var(--band-bg, #f3f4f6);
+  padding: var(--divider-space, 2rem) 1.5rem;
+  border-radius: .5rem;
+}`,
+    tw: `<section class="rounded-lg bg-gray-100 px-6 py-8">
+  <h2>Banded section</h2>
+  <p>The background change is the divider.</p>
+</section>`,
+    bs: `<section class="rounded bg-body-tertiary px-4 py-4">
+  <h2>Banded section</h2>
+  <p>The background change is the divider.</p>
+</section>`,
+    note: "Check text contrast on every band, and that bands still differ in forced-colors mode.",
+  },
+
+  /* ---------------- Cards & containers ---------------- */
+  {
+    id: "card-border", cat: "card", name: "Card border", a11y: "css",
+    use: "An outline that separates a card from the page.",
+    demo: `<article class="card-bordered"><h3>Card title</h3><p class="demo-text">A one-pixel border and a soft radius.</p></article>`,
+    html: `<article class="card-bordered">
+  <h3>Card title</h3>
+  <p>A one-pixel border and a soft radius.</p>
+</article>`,
+    css: `.card-bordered {
+  border: 1px solid var(--divider-color, #e5e7eb);
+  border-radius: .75rem;
+  padding: 1.25rem;
+}`,
+    tw: `<article class="rounded-xl border border-gray-200 p-5">
+  <h3>Card title</h3>
+  <p>A one-pixel border and a soft radius.</p>
+</article>`,
+    bs: `<article class="card">
+  <div class="card-body">
+    <h3 class="card-title h5">Card title</h3>
+    <p class="card-text">A one-pixel border and a soft radius.</p>
+  </div>
+</article>`,
+    note: "If the card is a region, give it a heading or aria-labelledby.",
+  },
+  {
+    id: "divided-list", cat: "card", name: "Divided list", a11y: "css",
+    use: "Rules between list rows.",
+    html: `<ul class="divided-list">
+  <li>Inbox</li>
+  <li>Drafts</li>
+  <li>Archive</li>
+</ul>`,
+    css: `.divided-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.divided-list > li {
+  padding-block: .75rem;
+}
+.divided-list > li + li {
+  border-top: 1px solid var(--divider-color, #e5e7eb);
+}`,
+    tw: `<ul class="divide-y divide-gray-200">
+  <li class="py-3">Inbox</li>
+  <li class="py-3">Drafts</li>
+  <li class="py-3">Archive</li>
+</ul>`,
+    bs: `<ul class="list-group list-group-flush">
+  <li class="list-group-item">Inbox</li>
+  <li class="list-group-item">Drafts</li>
+  <li class="list-group-item">Archive</li>
+</ul>`,
+    note: "Use <ul>/<li> so the item count is announced. Never put an <hr> between every row.",
+  },
+  {
+    id: "card-header-footer", cat: "card", name: "Header & footer rule", a11y: "css",
+    use: "A line under a card title or above its actions.",
+    html: `<article class="card-split">
+  <header>Card title</header>
+  <div>Body content goes here.</div>
+  <footer>Actions</footer>
+</article>`,
+    css: `.card-split {
+  border: 1px solid var(--divider-color, #e5e7eb);
+  border-radius: .75rem;
+}
+.card-split > * {
+  padding: .75rem 1.25rem;
+}
+.card-split > header {
+  font-weight: 600;
+  border-bottom: 1px solid var(--divider-color, #e5e7eb);
+}
+.card-split > footer {
+  border-top: 1px solid var(--divider-color, #e5e7eb);
+}`,
+    tw: `<article class="rounded-xl border border-gray-200">
+  <header class="border-b border-gray-200 px-5 py-3 font-semibold">Card title</header>
+  <div class="px-5 py-3">Body content goes here.</div>
+  <footer class="border-t border-gray-200 px-5 py-3">Actions</footer>
+</article>`,
+    bs: `<article class="card">
+  <div class="card-header fw-semibold">Card title</div>
+  <div class="card-body">Body content goes here.</div>
+  <div class="card-footer">Actions</div>
+</article>`,
+  },
+  {
+    id: "stacked-cards", cat: "card", name: "Stacked cards", a11y: "css",
+    use: "A gap plus a shadow between cards, no line at all.",
+    html: `<ul class="card-stack">
+  <li>First card</li>
+  <li>Second card</li>
+</ul>`,
+    css: `.card-stack {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--divider-space, 1rem);
+}
+.card-stack > li {
+  padding: 1rem 1.25rem;
+  border-radius: .75rem;
+  background: var(--card-bg, #ffffff);
+  box-shadow: 0 1px 2px rgb(0 0 0 / .06), 0 4px 12px rgb(0 0 0 / .08);
+}`,
+    tw: `<ul class="grid gap-4">
+  <li class="rounded-xl bg-white px-5 py-4 shadow-md">First card</li>
+  <li class="rounded-xl bg-white px-5 py-4 shadow-md">Second card</li>
+</ul>`,
+    bs: `<ul class="list-unstyled d-grid gap-3 m-0">
+  <li class="card card-body border-0 shadow-sm">First card</li>
+  <li class="card card-body border-0 shadow-sm">Second card</li>
+</ul>`,
+    note: "Make each card an <article> or <li> so the grouping is announced.",
+  },
+  {
+    id: "inset-list", cat: "card", name: "Inset list divider", a11y: "css",
+    use: "A rule that starts after the avatar or icon.",
+    html: `<ul class="inset-list">
+  <li><span class="avatar"></span><span class="inset-text">Ada Lovelace</span></li>
+  <li><span class="avatar"></span><span class="inset-text">Grace Hopper</span></li>
+  <li><span class="avatar"></span><span class="inset-text">Alan Turing</span></li>
+</ul>`,
+    css: `.inset-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.inset-list > li {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+.inset-list .avatar {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: var(--band-bg, #e5e7eb);
+  flex: none;
+}
+.inset-list .inset-text {
+  flex: 1;
+  padding-block: .75rem;
+  border-bottom: 1px solid var(--divider-color, #e5e7eb);
+}
+.inset-list > li:last-child .inset-text {
+  border-bottom: 0;
+}`,
+    tw: `<ul>
+  <li class="group flex items-center gap-3">
+    <span class="size-9 flex-none rounded-full bg-gray-200"></span>
+    <span class="flex-1 border-b border-gray-200 py-3 group-last:border-0">Ada Lovelace</span>
+  </li>
+  <li class="group flex items-center gap-3">
+    <span class="size-9 flex-none rounded-full bg-gray-200"></span>
+    <span class="flex-1 border-b border-gray-200 py-3 group-last:border-0">Grace Hopper</span>
+  </li>
+</ul>`,
+    bs: `<ul class="list-unstyled m-0 inset-list">
+  <li class="d-flex align-items-center gap-3">
+    <span class="rounded-circle bg-secondary-subtle flex-shrink-0 avatar"></span>
+    <span class="flex-grow-1 py-2 border-bottom inset-text">Ada Lovelace</span>
+  </li>
+  <li class="d-flex align-items-center gap-3">
+    <span class="rounded-circle bg-secondary-subtle flex-shrink-0 avatar"></span>
+    <span class="flex-grow-1 py-2 border-bottom inset-text">Grace Hopper</span>
+  </li>
+</ul>`,
+    bsCss: `.inset-list .avatar { width: 2.25rem; height: 2.25rem; }
+.inset-list > li:last-child .inset-text { border-bottom: 0 !important; }`,
+  },
+  {
+    id: "vertical", cat: "card", name: "Vertical divider", a11y: "decorative",
+    use: "A bar between inline items: nav links, stats, breadcrumbs.",
+    html: `<nav class="inline-nav">
+  <a href="#">Home</a>
+  <span class="vr-divider" aria-hidden="true"></span>
+  <a href="#">Docs</a>
+  <span class="vr-divider" aria-hidden="true"></span>
+  <a href="#">Blog</a>
+</nav>`,
+    css: `.inline-nav {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+.vr-divider {
+  align-self: stretch;
+  min-height: 1em;
+  border-left: 1px solid var(--divider-color, #d1d5db);
+}`,
+    tw: `<nav class="flex items-center gap-3">
+  <a href="#">Home</a>
+  <span class="h-4 border-l border-gray-300" aria-hidden="true"></span>
+  <a href="#">Docs</a>
+  <span class="h-4 border-l border-gray-300" aria-hidden="true"></span>
+  <a href="#">Blog</a>
+</nav>`,
+    bs: `<nav class="hstack gap-3">
+  <a href="#">Home</a>
+  <div class="vr" aria-hidden="true"></div>
+  <a href="#">Docs</a>
+  <div class="vr" aria-hidden="true"></div>
+  <a href="#">Blog</a>
+</nav>`,
+    note: "For a real vertical separator, use role=\"separator\" aria-orientation=\"vertical\" instead of aria-hidden.",
+  },
+
+  /* ---------------- Partial-width accents ---------------- */
+  {
+    id: "short-centered", cat: "accent", name: "Short centered rule", a11y: "semantic",
+    use: "A 64px rule between essay sections or under a centered title.",
+    html: `<hr class="divider-short">`,
+    css: `.divider-short {
+  border: 0;
+  border-top: var(--divider-thickness, 3px) solid var(--divider-color, #9ca3af);
+  width: var(--divider-width, 4rem);
+  margin: var(--divider-space, 2rem) auto;
+}`,
+    tw: `<hr class="mx-auto my-8 w-16 border-t-3 border-gray-400">`,
+    bs: `<hr class="mx-auto my-4 border-3 border-secondary opacity-75 hr-short">`,
+    bsCss: `.hr-short { width: 4rem; }`,
+    note: "Use a <hr> if it marks a break, or a <div aria-hidden=\"true\"> when it only decorates a title.",
+  },
+  {
+    id: "left-stub", cat: "accent", name: "Left-aligned stub", a11y: "semantic",
+    use: "A short rule aligned with left-set headings.",
+    demo: `<h3>Section heading</h3><hr class="divider-stub"><p class="demo-text">Text that follows the heading.</p>`,
+    html: `<hr class="divider-stub">`,
+    css: `.divider-stub {
+  border: 0;
+  border-top: var(--divider-thickness, 3px) solid var(--divider-accent, #4f46e5);
+  width: var(--divider-width, 3rem);
+  margin: var(--divider-space, 1rem) 0;
+}`,
+    tw: `<hr class="my-4 w-12 border-t-3 border-indigo-600">`,
+    bs: `<hr class="my-3 border-3 border-primary opacity-100 hr-stub">`,
+    bsCss: `.hr-stub { width: 3rem; }`,
+  },
+  {
+    id: "left-accent", cat: "accent", name: "Left accent bar", a11y: "css",
+    use: "A thick left border on callouts, quotes and alerts.",
+    html: `<aside class="callout">
+  <strong>Tip:</strong> the bar is decoration; the word “Tip” carries the meaning.
+</aside>`,
+    css: `.callout {
+  border-left: 4px solid var(--divider-accent, #4f46e5);
+  background: var(--callout-bg, #eef2ff);
+  padding: .875rem 1rem;
+  border-radius: 0 .5rem .5rem 0;
+}`,
+    tw: `<aside class="rounded-r-lg border-l-4 border-indigo-600 bg-indigo-50 px-4 py-3.5">
+  <strong>Tip:</strong> the bar is decoration; the word “Tip” carries the meaning.
+</aside>`,
+    bs: `<aside class="border-start border-4 border-primary bg-primary-subtle rounded-end p-3">
+  <strong>Tip:</strong> the bar is decoration; the word “Tip” carries the meaning.
+</aside>`,
+    note: "Meaning (warning, tip) must be in text or a labelled icon, never only in the bar color.",
+  },
+  {
+    id: "heading-underline", cat: "accent", name: "Heading underline", a11y: "css",
+    use: "A colored bar under a heading, drawn with ::after.",
+    html: `<h2 class="heading-underline">Section heading</h2>`,
+    css: `.heading-underline::after {
+  content: "";
+  display: block;
+  width: var(--divider-width, 3rem);
+  margin-top: .5rem;
+  border-top: var(--divider-thickness, 4px) solid var(--divider-accent, #4f46e5);
+  border-radius: 2px;
+}`,
+    tw: `<h2 class="after:mt-2 after:block after:w-12 after:rounded-sm after:border-t-4 after:border-indigo-600">Section heading</h2>`,
+    bs: `<h2 class="heading-underline">Section heading</h2>`,
+    bsCss: `.heading-underline::after {
+  content: "";
+  display: block;
+  width: 3rem;
+  margin-top: .5rem;
+  border-top: 4px solid var(--bs-primary);
+}`,
+    note: "Pseudo-elements are never announced. Keep 3:1 contrast if the bar signals a link.",
+  },
+  {
+    id: "inset-rule", cat: "accent", name: "Inset rule", a11y: "semantic",
+    use: "A full rule with generous side margins inside prose.",
+    html: `<hr class="divider-inset">`,
+    css: `.divider-inset {
+  border: 0;
+  border-top: 1px solid var(--divider-color, #d1d5db);
+  margin: var(--divider-space, 2rem) 15%;
+}`,
+    tw: `<hr class="mx-[15%] my-8 border-gray-300">`,
+    bs: `<hr class="my-4 border-secondary-subtle opacity-100 hr-inset">`,
+    bsCss: `.hr-inset { margin-inline: 15%; }`,
+  },
+  {
+    id: "pull-quote", cat: "accent", name: "Pull-quote bars", a11y: "css",
+    use: "Rules above and below a pull quote.",
+    html: `<blockquote class="pull-quote">
+  Good design is as little design as possible.
+</blockquote>`,
+    css: `.pull-quote {
+  margin: 0;
+  padding-block: 1.25rem;
+  border-block: 2px solid var(--divider-strong, #374151);
+  text-align: center;
+  font-size: 1.25rem;
+  font-style: italic;
+}`,
+    tw: `<blockquote class="border-y-2 border-gray-700 py-5 text-center text-xl italic">
+  Good design is as little design as possible.
+</blockquote>`,
+    bs: `<blockquote class="border-top border-bottom border-2 border-dark py-4 text-center fs-4 fst-italic">
+  Good design is as little design as possible.
+</blockquote>`,
+  },
+
+  /* ---------------- Gradients & effects ---------------- */
+  {
+    id: "fade-edges", cat: "gradient", name: "Fade edges", classic: true, a11y: "semantic",
+    use: "A soft break that fades out at both ends.",
+    html: `<hr class="divider-fade">`,
+    css: `.divider-fade {
+  border: 0;
+  border-top: 1px solid transparent; /* still draws in high-contrast mode */
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--divider-ink, #6b7280), transparent);
+  margin-block: var(--divider-space, 1.5rem);
+}`,
+    tw: `<hr class="my-6 h-px border-transparent bg-linear-to-r from-transparent via-gray-500 to-transparent">`,
+    twNote: "Tailwind v3: use bg-gradient-to-r instead of bg-linear-to-r.",
+    bs: `<hr class="my-4 opacity-100 hr-fade">`,
+    bsCss: `.hr-fade {
+  border-top-color: transparent;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--bs-secondary), transparent);
+}`,
+    note: "The old version of this page used -webkit-, -moz-, -ms- and -o- prefixes; one linear-gradient line is all any browser needs now.",
+  },
+  {
+    id: "one-sided-fade", cat: "gradient", name: "One-sided fade", a11y: "semantic",
+    use: "A rule that trails off after a left-aligned heading.",
+    demo: `<h3>Section heading</h3><hr class="divider-fade-right">`,
+    html: `<hr class="divider-fade-right">`,
+    css: `.divider-fade-right {
+  border: 0;
+  border-top: 1px solid transparent;
+  height: 2px;
+  background: linear-gradient(to right, var(--divider-accent, #4f46e5), transparent);
+  margin-block: var(--divider-space, 1rem);
+}`,
+    tw: `<hr class="my-4 h-0.5 border-transparent bg-linear-to-r from-indigo-600 to-transparent">`,
+    twNote: "Tailwind v3: use bg-gradient-to-r instead of bg-linear-to-r.",
+    bs: `<hr class="my-3 opacity-100 hr-fade-right">`,
+    bsCss: `.hr-fade-right {
+  border-top-color: transparent;
+  height: 2px;
+  background: linear-gradient(to right, var(--bs-primary), transparent);
+}`,
+  },
+  {
+    id: "brand-gradient", cat: "gradient", name: "Brand gradient", a11y: "decorative",
+    use: "A two- or three-color bar in brand colors.",
+    html: `<div class="divider-brand" aria-hidden="true"></div>`,
+    css: `.divider-brand {
+  height: var(--divider-thickness, 4px);
+  border-radius: 999px;
+  background: linear-gradient(to right, #6366f1, #ec4899, #f59e0b);
+  margin-block: var(--divider-space, 1.5rem);
+}`,
+    tw: `<div class="my-6 h-1 rounded-full bg-linear-to-r from-indigo-500 via-pink-500 to-amber-500" aria-hidden="true"></div>`,
+    twNote: "Tailwind v3: use bg-gradient-to-r instead of bg-linear-to-r.",
+    bs: `<div class="my-4 rounded-pill divider-brand" aria-hidden="true"></div>`,
+    bsCss: `.divider-brand {
+  height: 4px;
+  background: linear-gradient(to right, var(--bs-indigo), var(--bs-pink), var(--bs-orange));
+}`,
+    note: "If it marks a real break, use an <hr> with a transparent border-top as the fallback. Check the lightest stop against the background (3:1).",
+  },
+  {
+    id: "glow", cat: "gradient", name: "Glow", a11y: "semantic",
+    use: "A neon-style rule for dark themes.",
+    demo: `<div class="demo-dark"><hr class="divider-glow"></div>`,
+    html: `<hr class="divider-glow">`,
+    css: `.divider-glow {
+  border: 0;
+  border-top: 1px solid var(--glow-color, #22d3ee);
+  box-shadow: 0 0 8px 1px var(--glow-color, #22d3ee);
+  margin-block: var(--divider-space, 1.5rem);
+}`,
+    tw: `<hr class="my-6 border-cyan-400 shadow-[0_0_8px_1px_var(--color-cyan-400)]">`,
+    bs: `<hr class="my-4 opacity-100 hr-glow">`,
+    bsCss: `.hr-glow {
+  border-top-color: var(--bs-info);
+  box-shadow: 0 0 8px 1px var(--bs-info);
+}`,
+    note: "If you animate the glow, stop the animation under prefers-reduced-motion.",
+  },
+  {
+    id: "drop-shadow", cat: "gradient", name: "Drop shadow", a11y: "semantic",
+    use: "A curved shadow below a line, suggesting a fold.",
+    html: `<hr class="divider-shadow">`,
+    css: `.divider-shadow {
+  border: 0;
+  border-top: 1px solid var(--divider-color, #e5e7eb);
+  height: 12px;
+  background: radial-gradient(ellipse at top, rgb(0 0 0 / .18), transparent 70%);
+  margin-block: var(--divider-space, 1.5rem);
+}`,
+    tw: `<hr class="my-6 h-3 border-gray-200 bg-[radial-gradient(ellipse_at_top,rgb(0_0_0/0.18),transparent_70%)]">`,
+    bs: `<hr class="my-4 border-secondary-subtle opacity-100 hr-shadow">`,
+    bsCss: `.hr-shadow {
+  height: 12px;
+  background: radial-gradient(ellipse at top, rgb(0 0 0 / .18), transparent 70%);
+}`,
+    note: "The shadow can vanish in high contrast, so the 1px line stays.",
+  },
+
+
+  /* ---------------- Printer's ornaments ---------------- */
+  {
+    id: "hedera", cat: "type", name: "Hedera ❧", a11y: "semantic",
+    use: "The rotated floral heart, a printer's flower used as a section mark since the earliest presses.",
+    html: `<hr class="divider-hedera">`,
+    css: `.divider-hedera {
+  border: 0;
+  height: auto;
+  overflow: visible;
+  text-align: center;
+  margin-block: var(--divider-space, 2rem);
+  color: var(--divider-accent, #7c2d12);
+}
+.divider-hedera::before {
+  content: "❧";
+  content: "❧" / "";
+  font-size: 1.75rem;
+  line-height: 1;
+}`,
+    tw: `<hr class="my-8 h-auto border-0 text-center text-3xl leading-none text-orange-900 before:content-['❧']">`,
+    bs: `<hr class="my-5 border-0 opacity-100 text-center hr-hedera">`,
+    bsCss: `.hr-hedera::before {
+  content: "❧" / "";
+  font-size: 1.75rem;
+  color: var(--bs-warning-text-emphasis);
+}`,
+    note: "Swap the glyph for ☙ (reversed) or ❦ (upright). Drawn in CSS so it isn't read aloud.",
+  },
+  {
+    id: "fleuron-rule", cat: "type", name: "Fleuron rule ☙ ❦ ❧", a11y: "decorative",
+    use: "A row of printer's flowers between two hairlines, for chapter openings.",
+    html: `<div class="divider-fleuron-rule" role="separator">
+  <span aria-hidden="true">☙ ❦ ❧</span>
+</div>`,
+    css: `.divider-fleuron-rule {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-block: var(--divider-space, 2rem);
+  color: var(--divider-accent, #7c2d12);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+.divider-fleuron-rule::before,
+.divider-fleuron-rule::after {
+  content: "";
+  flex: 1;
+  border-top: 1px solid var(--divider-color, #d6c7b8);
+}`,
+    tw: `<div class="my-8 flex items-center gap-4 text-xl leading-none text-orange-900 before:flex-1 before:border-t before:border-stone-300 after:flex-1 after:border-t after:border-stone-300" role="separator">
+  <span aria-hidden="true">☙ ❦ ❧</span>
+</div>`,
+    bs: `<div class="d-flex align-items-center gap-3 my-5 fs-5 text-warning-emphasis" role="separator">
+  <hr class="flex-grow-1 m-0" role="presentation">
+  <span aria-hidden="true">☙ ❦ ❧</span>
+  <hr class="flex-grow-1 m-0" role="presentation">
+</div>`,
+    note: "The glyphs are hidden; role=\"separator\" on the wrapper keeps the break announced.",
+  },
+  {
+    id: "asterism", cat: "type", name: "Asterism ⁂", a11y: "semantic",
+    use: "A single triangle of asterisks, a compact cousin of the dinkus.",
+    html: `<hr class="divider-asterism">`,
+    css: `.divider-asterism {
+  border: 0;
+  height: auto;
+  overflow: visible;
+  text-align: center;
+  margin-block: var(--divider-space, 2rem);
+  color: var(--divider-text, #6b7280);
+}
+.divider-asterism::before {
+  content: "⁂";
+  content: "⁂" / "";
+  font-size: 1.5rem;
+  line-height: 1;
+}`,
+    tw: `<hr class="my-8 h-auto border-0 text-center text-2xl leading-none text-gray-500 before:content-['⁂']">`,
+    bs: `<hr class="my-5 border-0 opacity-100 text-center text-body-secondary hr-asterism">`,
+    bsCss: `.hr-asterism::before {
+  content: "⁂" / "";
+  font-size: 1.5rem;
+}`,
+  },
+  {
+    id: "swelled-rule", cat: "type", name: "Swelled rule", a11y: "decorative",
+    use: "A rule that is thick in the middle and tapers to points, a staple of Victorian title pages.",
+    html: `<svg class="divider-swelled" viewBox="0 0 240 8" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+  ${SWELL}
+</svg>`,
+    css: `.divider-swelled {
+  display: block;
+  width: min(100%, var(--divider-width, 20rem));
+  height: var(--divider-thickness, 6px);
+  margin: var(--divider-space, 2rem) auto;
+  color: var(--divider-strong, #374151);
+}`,
+    tw: `<svg class="mx-auto my-8 block h-1.5 w-full max-w-80 text-gray-700" viewBox="0 0 240 8" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+  ${SWELL}
+</svg>`,
+    bs: `<svg class="d-block mx-auto my-5 w-100 text-body-emphasis" style="max-width: 20rem; height: 6px" viewBox="0 0 240 8" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+  ${SWELL}
+</svg>`,
+    note: "If it marks a real break, put an <hr class=\"visually-hidden\"> next to it.",
+  },
+  {
+    id: "scrollwork", cat: "type", name: "Scrollwork flourish", a11y: "decorative",
+    use: "Two curled scrolls meeting at a dot, the classic “curly divider”.",
+    html: `<svg class="divider-scroll" viewBox="0 0 240 24" aria-hidden="true" focusable="false">
+  ${SCROLL}
+</svg>`,
+    css: `.divider-scroll {
+  display: block;
+  width: min(100%, var(--divider-width, 18rem));
+  height: auto;
+  margin: var(--divider-space, 2rem) auto;
+  color: var(--divider-strong, #374151);
+}`,
+    tw: `<svg class="mx-auto my-8 block w-full max-w-72 text-gray-700" viewBox="0 0 240 24" aria-hidden="true" focusable="false">
+  ${SCROLL}
+</svg>`,
+    bs: `<svg class="d-block mx-auto my-5 w-100 text-body-emphasis" style="max-width: 18rem" viewBox="0 0 240 24" aria-hidden="true" focusable="false">
+  ${SCROLL}
+</svg>`,
+    note: "Inline SVG takes the text color, so it follows dark mode. Change stroke-width for a bolder line.",
+  },
+  {
+    id: "headpiece", cat: "type", name: "Headpiece", a11y: "decorative",
+    use: "An ornament that sits above a chapter title.",
+    demo: `<div class="headpiece"><svg viewBox="0 0 240 40" aria-hidden="true" focusable="false">${HEAD}</svg><h3>Chapter One</h3></div>`,
+    html: `<header class="headpiece">
+  <svg viewBox="0 0 240 40" aria-hidden="true" focusable="false">
+  ${HEAD}
+  </svg>
+  <h2>Chapter One</h2>
+</header>`,
+    css: `.headpiece {
+  text-align: center;
+  margin-block: var(--divider-space, 2rem);
+}
+.headpiece > svg {
+  display: block;
+  width: min(100%, var(--divider-width, 14rem));
+  height: auto;
+  margin: 0 auto .75rem;
+  color: var(--divider-accent, #7c2d12);
+}`,
+    tw: `<header class="my-8 text-center">
+  <svg class="mx-auto mb-3 block w-full max-w-56 text-orange-900" viewBox="0 0 240 40" aria-hidden="true" focusable="false">
+  ${HEAD}
+  </svg>
+  <h2>Chapter One</h2>
+</header>`,
+    bs: `<header class="my-5 text-center">
+  <svg class="d-block mx-auto mb-3 w-100 text-warning-emphasis" style="max-width: 14rem" viewBox="0 0 240 40" aria-hidden="true" focusable="false">
+  ${HEAD}
+  </svg>
+  <h2>Chapter One</h2>
+</header>`,
+    note: "The heading carries the structure; the ornament is hidden.",
+  },
+  {
+    id: "tailpiece", cat: "type", name: "Tailpiece", a11y: "semantic",
+    use: "A tapering triangle of ornaments that marks the end of a chapter or book.",
+    html: `<hr class="divider-tailpiece">`,
+    css: `.divider-tailpiece {
+  border: 0;
+  height: auto;
+  overflow: visible;
+  text-align: center;
+  margin-block: var(--divider-space, 2.5rem);
+  color: var(--divider-accent, #7c2d12);
+}
+.divider-tailpiece::before {
+  content: "❧ ❦ ❧\\A❦ ❦\\A❧";
+  content: "❧ ❦ ❧\\A❦ ❦\\A❧" / "";
+  white-space: pre;
+  display: inline-block;
+  font-size: 1.1rem;
+  line-height: 1.25;
+}`,
+    tw: `<hr class="my-10 h-auto border-0 text-center text-lg/tight whitespace-pre text-orange-900 before:inline-block before:content-['❧_❦_❧\\A❦_❦\\A❧']">`,
+    twNote: "\\A in the class is a CSS line break; whitespace-pre keeps the three rows.",
+    bs: `<hr class="my-5 border-0 opacity-100 text-center text-warning-emphasis hr-tailpiece">`,
+    bsCss: `.hr-tailpiece::before {
+  content: "❧ ❦ ❧\\A❦ ❦\\A❧" / "";
+  white-space: pre;
+  display: inline-block;
+  line-height: 1.25;
+}`,
+    note: "Known in French printing as a cul-de-lampe. Use it once, at the very end.",
+  },
+  /* ---------------- Ornamental ---------------- */
+  {
+    id: "labeled", cat: "ornament", name: "Labeled divider", a11y: "labeled",
+    use: "“OR” between sign-in options, “Today” in a chat log.",
+    html: `<div class="divider-label">or</div>`,
+    css: `.divider-label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--divider-text, #6b7280);
+  font-size: .875rem;
+  margin-block: var(--divider-space, 1.5rem);
+}
+.divider-label::before,
+.divider-label::after {
+  content: "";
+  flex: 1;
+  border-top: 1px solid var(--divider-color, #d1d5db);
+}`,
+    tw: `<div class="my-6 flex items-center gap-4 text-sm text-gray-500 before:flex-1 before:border-t before:border-gray-300 after:flex-1 after:border-t after:border-gray-300">or</div>`,
+    bs: `<div class="d-flex align-items-center gap-3 my-4 small text-body-secondary">
+  <hr class="flex-grow-1 m-0" role="presentation">
+  <span>or</span>
+  <hr class="flex-grow-1 m-0" role="presentation">
+</div>`,
+    note: "Don't use a single <hr>: it can't contain text.",
+  },
+  {
+    id: "icon-center", cat: "ornament", name: "Icon center", a11y: "decorative",
+    use: "A star, logo or icon between two lines.",
+    html: `<div class="divider-icon" role="separator">
+  <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">${STAR}</svg>
+</div>`,
+    css: `.divider-icon {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--divider-accent, #4f46e5);
+  margin-block: var(--divider-space, 1.5rem);
+}
+.divider-icon::before,
+.divider-icon::after {
+  content: "";
+  flex: 1;
+  border-top: 1px solid var(--divider-color, #d1d5db);
+}`,
+    tw: `<div class="my-6 flex items-center gap-4 text-indigo-600 before:flex-1 before:border-t before:border-gray-300 after:flex-1 after:border-t after:border-gray-300" role="separator">
+  <svg class="size-[18px]" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${STAR}</svg>
+</div>`,
+    bs: `<div class="d-flex align-items-center gap-3 my-4 text-primary" role="separator">
+  <hr class="flex-grow-1 m-0" role="presentation">
+  <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">${STAR}</svg>
+  <hr class="flex-grow-1 m-0" role="presentation">
+</div>`,
+    note: "The icon is hidden. Keep role=\"separator\" on the wrapper only if it marks a real break.",
+  },
+  {
+    id: "dinkus", cat: "type", name: "Dinkus ∗ ∗ ∗", a11y: "semantic",
+    use: "A scene break in fiction and long-form writing.",
+    html: `<hr class="divider-dinkus">`,
+    css: `.divider-dinkus {
+  border: 0;
+  height: auto;
+  overflow: visible;
+  text-align: center;
+  margin-block: var(--divider-space, 2rem);
+  color: var(--divider-text, #6b7280);
+}
+.divider-dinkus::before {
+  content: "∗ ∗ ∗";
+  content: "∗ ∗ ∗" / "";
+  letter-spacing: .5em;
+  font-size: 1.25rem;
+}`,
+    tw: `<hr class="my-8 h-auto border-0 text-center text-xl tracking-[.5em] text-gray-500 before:content-['∗_∗_∗']">`,
+    bs: `<hr class="my-5 border-0 opacity-100 text-center text-body-secondary hr-dinkus">`,
+    bsCss: `.hr-dinkus::before {
+  content: "∗ ∗ ∗" / "";
+  letter-spacing: .5em;
+  font-size: 1.25rem;
+}`,
+    note: "Draw the asterisks in CSS. Literal asterisks in the HTML are read aloud as “star star star”.",
+  },
+  {
+    id: "fleuron", cat: "type", name: "Fleuron ❦", a11y: "semantic",
+    use: "A classic book-style section ornament.",
+    html: `<hr class="divider-fleuron">`,
+    css: `.divider-fleuron {
+  border: 0;
+  height: auto;
+  overflow: visible;
+  text-align: center;
+  margin-block: var(--divider-space, 2rem);
+  color: var(--divider-accent, #9f1239);
+  font-family: Georgia, serif;
+}
+.divider-fleuron::before {
+  content: "❦";
+  content: "❦" / "";
+  font-size: 1.75rem;
+  line-height: 1;
+}`,
+    tw: `<hr class="my-8 h-auto border-0 text-center font-serif text-3xl leading-none text-rose-800 before:content-['❦']">`,
+    bs: `<hr class="my-5 border-0 opacity-100 text-center text-danger-emphasis hr-fleuron">`,
+    bsCss: `.hr-fleuron::before {
+  content: "❦" / "";
+  font-family: Georgia, serif;
+  font-size: 1.75rem;
+}`,
+    note: "The / \"\" part gives the glyph empty alt text, so it isn't read aloud.",
+  },
+  {
+    id: "wave", cat: "ornament", name: "Wave edge", a11y: "decorative",
+    use: "An SVG edge between a hero and the content below.",
+    demo: `<svg class="divider-wave" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true" focusable="false">${WAVE}</svg><div class="demo-wave-after">Content below the wave</div>`,
+    html: `<svg class="divider-wave" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+  ${WAVE}
+</svg>`,
+    css: `.divider-wave {
+  display: block;
+  width: 100%;
+  height: var(--divider-height, 40px);
+  color: var(--wave-color, #6366f1); /* match the next section's background */
+}`,
+    tw: `<svg class="block h-10 w-full text-indigo-500" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+  ${WAVE}
+</svg>`,
+    bs: `<svg class="d-block w-100 text-primary" style="height: 40px" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+  ${WAVE}
+</svg>`,
+    note: "Set the wave color to the background of the section below it.",
+  },
+  {
+    id: "image-divider", cat: "ornament", name: "Image divider", a11y: "decorative",
+    use: "Your own artwork as a divider.",
+    html: `<div class="divider-image" aria-hidden="true"></div>`,
+    css: `.divider-image {
+  height: 24px;
+  margin-block: var(--divider-space, 1.5rem);
+  /* swap in your own image, e.g. url("/img/divider.svg") */
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 24'%3E%3Cpath d='M0 12h86M114 12h86' stroke='%239ca3af' stroke-width='1.5'/%3E%3Cpath d='M100 3l9 9-9 9-9-9z' fill='%236366f1'/%3E%3C/svg%3E") center / contain no-repeat;
+}`,
+    tw: `<div class="my-6 h-6 bg-[url(/img/divider.svg)] bg-contain bg-center bg-no-repeat" aria-hidden="true"></div>`,
+    bs: `<img src="/img/divider.svg" alt="" class="d-block mx-auto my-4" height="24">`,
+    note: "Use alt=\"\" or a CSS background. Never a descriptive alt like “divider”.",
+  },
+];
+
+/* ======================================================================
+   React / Vue / Svelte tabs, generated from the Tailwind markup
+   ====================================================================== */
+const pascal = id => id.replace(/(^|-)(\w)/g, (_, __, c) => c.toUpperCase());
+const indent = (s, n) => s.split("\n").map(l => (l ? " ".repeat(n) + l : l)).join("\n");
+// Split the root element's opening tag into its class list and other attributes.
+function splitRoot(markup) {
+  const m = markup.match(/^<([a-z0-9]+)([^>]*?)>/i);
+  const attrs = m[2];
+  const cls = (attrs.match(/\sclass="([^"]*)"/) || [, ""])[1];
+  const rest = attrs.replace(/\sclass="[^"]*"/, "");
+  return { tag: m[1], cls, rest, after: markup.slice(m[0].length) };
+}
+
+function toReact(d) {
+  const name = "Divider" + pascal(d.id).replace(/^Divider/, "");
+  const r = splitRoot(d.tw);
+  const isVoid = /^(hr|img)$/.test(r.tag);
+  const rest = r.rest.replace(/style="height: 40px"/, "style={{ height: 40 }}");
+  const open = `<${r.tag}${rest}\n  className={cn("${r.cls}", className)}\n  {...props}\n${isVoid ? "/>" : ">"}`;
+  const jsx = (open + r.after)
+    .replace(/\sclass="/g, ' className="')
+    .replace(/\s(stroke|fill)-([a-z]+)=/g, (_, a, b) => ` ${a}${b[0].toUpperCase()}${b.slice(1)}=`);
+  return `// components/ui/${d.id}.tsx
+import { cn } from "@/lib/utils"
+
+export function ${name}({ className, ...props }: React.ComponentProps<"${r.tag}">) {
+  return (
+${indent(jsx, 4)}
+  )
+}`;
+}
+
+const toVue = d => `<!-- components/${pascal(d.id)}.vue -->
+<template>
+${indent(d.tw, 2)}
+</template>`;
+
+function toSvelte(d) {
+  const r = splitRoot(d.tw);
+  const cls = r.cls ? `${r.cls} {className}` : "{className}";
+  return `<!-- lib/components/${pascal(d.id)}.svelte -->
+<script>
+  let { class: className = "", ...rest } = $props();
+<\/script>
+
+<${r.tag}${r.rest} class="${cls}" {...rest}>${r.after}`;
+}
+
+const FORMATS = [
+  { id: "css", label: "HTML + CSS",
+    snips: d => [{ label: "HTML", code: d.html }, ...(d.css ? [{ label: "CSS", code: d.css }] : [])],
+    note: d => d.css ? "" : "No CSS needed: this is the browser's built-in style." },
+  { id: "tw", label: "Tailwind v4",
+    snips: d => [{ code: d.tw }], note: d => d.twNote || "" },
+  { id: "bs", label: "Bootstrap 5.3",
+    snips: d => [{ label: "HTML", code: d.bs }, ...(d.bsCss ? [{ label: "CSS", code: d.bsCss }] : [])],
+    note: d => d.bsCss ? "Bootstrap has no utility for this part, so add the small CSS rule." : "" },
+  { id: "react", label: "React",
+    snips: d => [{ code: toReact(d) }],
+    note: () => "shadcn/ui style, with Tailwind classes. Uses the cn() helper from @/lib/utils (clsx + tailwind-merge)." },
+  { id: "vue", label: "Vue",
+    snips: d => [{ code: toVue(d) }],
+    note: () => "Tailwind classes. Vue passes extra classes and attributes to the root element automatically." },
+  { id: "svelte", label: "Svelte 5",
+    snips: d => [{ code: toSvelte(d) }],
+    note: () => "Tailwind classes. Extra classes and attributes are forwarded to the root element." },
+];
+
+/* ======================================================================
+   UI
+   ====================================================================== */
+const store = {
+  get(k, f) { try { return localStorage.getItem(k) ?? f; } catch { return f; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+};
+let currentFormat = store.get("dividers.format", "css");
+if (!FORMATS.some(f => f.id === currentFormat)) currentFormat = "css";
+let currentCat = "all";
+let query = "";
+
+const $ = (sel, root = document) => root.querySelector(sel);
+const el = (tag, attrs = {}, ...kids) => {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") n.className = v;
+    else if (k.startsWith("on")) n.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) n.setAttribute(k, v === true ? "" : v);
+  }
+  for (const k of kids.flat()) if (k != null) n.append(k.nodeType ? k : document.createTextNode(k));
+  return n;
+};
+
+// The live previews use exactly the CSS the "HTML + CSS" tab hands out.
+$("#divider-css").textContent = D.filter(d => d.css).map(d => d.css).join("\n\n");
+
+async function copyText(text, btn) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    const ta = el("textarea", { style: "position:fixed;opacity:0" }, text);
+    document.body.append(ta); ta.select();
+    try { document.execCommand("copy"); } catch {}
+    ta.remove();
+  }
+  btn.textContent = "Copied ✓"; btn.classList.add("done");
+  clearTimeout(btn._t);
+  btn._t = setTimeout(() => { btn.textContent = "Copy"; btn.classList.remove("done"); }, 1400);
+}
+
+function snippetBlock(s) {
+  const btn = el("button", { class: "copy", type: "button", "aria-label": `Copy ${s.label || "code"}` }, "Copy");
+  const pre = el("pre", { tabindex: "0", title: "Click to copy" }, el("code", {}, s.code));
+  const go = () => copyText(s.code, btn);
+  btn.addEventListener("click", go);
+  pre.addEventListener("click", () => { if (!getSelection().toString()) go(); });
+  pre.addEventListener("keydown", e => { if (e.key === "Enter") go(); });
+  return el("div", { class: "snip" }, s.label ? el("p", { class: "snip-label" }, s.label) : null, pre, btn);
+}
+
+function codePanel(d, uid) {
+  const panel = el("div", { class: "code" });
+  const tabs = el("div", { class: "tabs", role: "tablist", "aria-label": `${d.name} code formats` });
+  const body = el("div", { class: "snips", role: "tabpanel", id: `${uid}-panel` });
+  const show = fid => {
+    const f = FORMATS.find(x => x.id === fid);
+    body.replaceChildren(...f.snips(d).map(snippetBlock));
+    const n = f.note(d);
+    if (n) body.append(el("p", { class: "note" }, n));
+    tabs.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", String(t.dataset.f === fid)));
+  };
+  FORMATS.forEach(f => tabs.append(el("button", {
+    class: "tab", role: "tab", type: "button", "data-f": f.id, "aria-controls": `${uid}-panel`,
+    onclick: () => setFormat(f.id),
+  }, f.label)));
+  panel.append(tabs, body);
+  panel._show = show;
+  show(currentFormat);
+  return panel;
+}
+
+// Picking a format anywhere switches every open code panel and is remembered.
+function setFormat(fid) {
+  currentFormat = fid;
+  store.set("dividers.format", fid);
+  $("#format").value = fid;
+  document.querySelectorAll(".code").forEach(p => p._show && p._show(fid));
+}
+
+function previewNode(d, cls) {
+  const p = el("div", { class: "preview-surface " + cls });
+  p.innerHTML = d.demo || d.html;
+  p.querySelectorAll("a").forEach(a => a.setAttribute("tabindex", "-1"));
+  return p;
+}
+
+function badges(d) {
+  return el("div", { class: "badges" },
+    el("span", { class: "badge", title: A11Y[d.a11y][1] }, A11Y[d.a11y][0]),
+    d.classic ? el("span", { class: "badge classic", title: "From the original page, modernised" }, "Classic") : null);
+}
+
+function card(d) {
+  const uid = "c-" + d.id;
+  let panel = null;
+  const toggle = el("button", { class: "toggle-code", type: "button", "aria-expanded": "false", "aria-controls": uid + "-code" }, "Show code");
+  const open = () => openDetail(d.id);
+  const c = el("article", { class: "card", id: d.id },
+    el("div", { class: "card-preview", tabindex: "0", role: "button", "aria-label": `Open ${d.name}`,
+      onclick: open, onkeydown: e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } } },
+      previewNode(d, "")),
+    el("div", { class: "card-body" },
+      el("div", { class: "card-title" }, el("h3", {}, el("button", { type: "button", onclick: open }, d.name))),
+      el("p", { class: "card-use" }, d.use),
+      badges(d),
+      toggle));
+  toggle.addEventListener("click", () => {
+    const isOpen = toggle.getAttribute("aria-expanded") === "true";
+    if (!panel) { panel = codePanel(d, uid); panel.id = uid + "-code"; c.append(panel); }
+    panel.hidden = isOpen;
+    toggle.setAttribute("aria-expanded", String(!isOpen));
+    toggle.textContent = isOpen ? "Show code" : "Hide code";
+  });
+  return c;
+}
+
+function matches(d) {
+  if (currentCat !== "all" && d.cat !== currentCat) return false;
+  if (!query) return true;
+  const hay = `${d.name} ${d.use} ${d.id} ${A11Y[d.a11y][0]}`.toLowerCase();
+  return query.split(/\s+/).every(w => hay.includes(w));
+}
+
+function renderGallery() {
+  const g = $("#gallery");
+  g.replaceChildren();
+  let shown = 0;
+  for (const cat of CATEGORIES) {
+    const items = D.filter(d => d.cat === cat.id && matches(d));
+    if (!items.length) continue;
+    shown += items.length;
+    g.append(el("section", { class: "category", "aria-labelledby": "h-" + cat.id },
+      el("h2", { id: "h-" + cat.id }, cat.name),
+      el("p", {}, cat.blurb),
+      el("div", { class: "grid" }, items.map(card))));
+  }
+  if (!shown) g.append(el("p", { class: "empty" }, "No dividers match that search."));
+}
+
+function renderChips() {
+  const all = [{ id: "all", name: "All", n: D.length },
+    ...CATEGORIES.map(c => ({ ...c, n: D.filter(d => d.cat === c.id).length }))];
+  $("#chips").replaceChildren(...all.map(c => el("button", {
+    class: "chip", type: "button", "aria-pressed": String(currentCat === c.id),
+    onclick: () => { currentCat = c.id; renderChips(); renderGallery(); },
+  }, c.name, el("span", { class: "n" }, c.n))));
+}
+
+/* ---------- Detail page (opens as a dialog, linkable as #/divider-id) ---------- */
+const dlg = $("#detail");
+
+function openDetail(id, push = true) {
+  const i = D.findIndex(d => d.id === id);
+  if (i < 0) return;
+  const d = D[i];
+  const prev = D[(i - 1 + D.length) % D.length], next = D[(i + 1) % D.length];
+  const cat = CATEGORIES.find(c => c.id === d.cat);
+
+  const article = el("div", { class: "article preview-surface" });
+  article.innerHTML = `<h3>The quiet work of a divider</h3>
+    <p>A good divider tells the reader that one idea has ended and another is about to begin, without shouting about it. It should feel like a breath between paragraphs.</p>
+    ${d.demo || d.html}
+    <p>Here the next thought picks up. Notice how the spacing, weight and color of the break change the pace of the page.</p>`;
+  article.querySelectorAll("a").forEach(a => a.setAttribute("tabindex", "-1"));
+
+  dlg.replaceChildren(
+    el("div", { class: "detail-head" },
+      el("div", {},
+        el("p", { class: "detail-kicker" }, cat.name),
+        el("h2", { id: "detail-title" }, d.name),
+        el("p", {}, d.use)),
+      el("button", { class: "icon-btn", type: "button", "aria-label": "Close", onclick: () => closeDetail() }, "✕")),
+    el("div", { class: "detail-main" },
+      el("div", { class: "panel" }, el("p", { class: "panel-title" }, "Preview"), previewNode(d, "big-preview")),
+      el("div", { class: "panel" }, el("p", { class: "panel-title" }, "In context"), article),
+      el("div", { class: "panel a11y" },
+        el("strong", {}, "Accessibility: " + A11Y[d.a11y][0]),
+        el("span", {}, A11Y[d.a11y][1]),
+        d.note ? el("span", {}, d.note) : null),
+      codePanel(d, "dlg-" + d.id),
+      el("div", { class: "detail-nav" },
+        el("button", { type: "button", onclick: () => openDetail(prev.id) }, "← " + prev.name),
+        el("button", { type: "button", onclick: () => openDetail(next.id) }, next.name + " →"))));
+
+  if (!dlg.open) dlg.showModal();
+  dlg.scrollTop = 0;
+  if (push && location.hash !== "#/" + id) history.pushState(null, "", "#/" + id);
+}
+
+function closeDetail(push = true) {
+  if (dlg.open) dlg.close();
+  if (push && location.hash.startsWith("#/")) history.pushState(null, "", location.pathname + location.search);
+}
+
+dlg.addEventListener("click", e => { if (e.target === dlg) closeDetail(); });
+dlg.addEventListener("cancel", e => { e.preventDefault(); closeDetail(); });
+const fromHash = () => {
+  const m = location.hash.match(/^#\/([\w-]+)/);
+  if (m) openDetail(m[1], false); else closeDetail(false);
+};
+window.addEventListener("popstate", fromHash);
+
+/* ---------- Toolbar ---------- */
+const fmtSel = $("#format");
+FORMATS.forEach(f => fmtSel.append(el("option", { value: f.id }, f.label)));
+fmtSel.value = currentFormat;
+fmtSel.addEventListener("change", () => setFormat(fmtSel.value));
+
+$("#search").addEventListener("input", e => { query = e.target.value.trim().toLowerCase(); renderGallery(); });
+
+const savedTheme = store.get("dividers.theme", "");
+if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+$("#theme").addEventListener("click", () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  store.set("dividers.theme", root.dataset.theme);
+});
+
+renderChips();
+renderGallery();
+fromHash();
+</script>
+</body>
+</html>
